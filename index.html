@@ -33,6 +33,7 @@
 
         <!-- Main Content -->
         <main class="app-main">
+
             <!-- Upload Section -->
             <section class="upload-section" id="uploadSection">
                 <div class="upload-area" id="uploadArea">
@@ -92,6 +93,16 @@
                 </div>
             </section>
 
+            <!-- Action Buttons -->
+            <section class="action-section" id="actionSection" style="display: none;">
+                <button class="btn-primary" id="runMacro">
+                    <i class="fas fa-play"></i> Run Macro
+                </button>
+                <button class="btn-secondary" id="downloadResult">
+                    <i class="fas fa-download"></i> Download Result
+                </button>
+            </section>
+
             <!-- Parameters Section - COLLAPSIBLE -->
             <section class="params-section" id="paramsSection" style="display: none;">
                 <div class="params-header" id="paramsToggle" style="cursor: pointer;">
@@ -106,16 +117,6 @@
                         <!-- Dynamic parameters will be injected here -->
                     </div>
                 </div>
-            </section>
-
-            <!-- Action Buttons -->
-            <section class="action-section" id="actionSection" style="display: none;">
-                <button class="btn-primary" id="runMacro">
-                    <i class="fas fa-play"></i> Run Macro
-                </button>
-                <button class="btn-secondary" id="downloadResult">
-                    <i class="fas fa-download"></i> Download Result
-                </button>
             </section>
 
             <!-- Results Section -->
