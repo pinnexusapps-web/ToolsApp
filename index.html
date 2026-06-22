@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excel Macro Converter - DSU11425</title>
+    
+    <!-- SheetJS for Excel/CSV handling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-robot"></i>
+                    Excel Macro Converter
+                </h1>
+                <span class="version">v2.1</span>
+                <span class="badge">DSU11425</span>
+            </div>
+            <p class="subtitle">Upload your Excel/CSV file and run any of the 3 macros</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSection">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <h3>Upload Your Excel File</h3>
+                        <p>Drag & drop or click to browse</p>
+                        <span class="file-types">Supports .xlsx, .xls, .csv</span>
+                    </div>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+                </div>
+                <div class="file-info" id="fileInfo" style="display: none;">
+                    <i class="fas fa-file-excel"></i>
+                    <span id="fileName">file.xlsx</span>
+                    <span class="file-size" id="fileSize">0 KB</span>
+                    <button class="btn-remove" id="removeFile"><i class="fas fa-times"></i></button>
+                </div>
+            </section>
+
+            <!-- Function Selector -->
+            <section class="function-selector">
+                <h2><i class="fas fa-cogs"></i> Select Macro Function</h2>
+                <div class="function-cards">
+                    <div class="function-card" data-function="1">
+                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="card-content">
+                            <h3>Calculate Receivings</h3>
+                            <p>Calculate receiving totals with SKU lookup and formulas</p>
+                            <span class="version-tag">v1.2.2</span>
+                        </div>
+                        <div class="card-check">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="function-card" data-function="2">
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="card-content">
+                            <h3>Generate Bio Time</h3>
+                            <p>Convert roster data to shift schedules with dates</p>
+                            <span class="version-tag">v1.1</span>
+                        </div>
+                        <div class="card-check">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="function-card" data-function="3">
+                        <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="card-content">
+                            <h3>Generate Daily Report</h3>
+                            <p>Create comprehensive daily sales and picker reports</p>
+                            <span class="version-tag">v1.3</span>
+                        </div>
+                        <div class="card-check">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parameters Section - COLLAPSIBLE -->
+            <section class="params-section" id="paramsSection" style="display: none;">
+                <div class="params-header" id="paramsToggle" style="cursor: pointer;">
+                    <h2><i class="fas fa-sliders-h"></i> Parameters</h2>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span class="param-toggle-icon" id="paramToggleIcon"><i class="fas fa-chevron-down"></i></span>
+                        <button class="btn-reset" id="resetParams"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </div>
+                <div class="params-content-wrapper" id="paramsContentWrapper">
+                    <div class="params-content" id="paramsContent">
+                        <!-- Dynamic parameters will be injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-section" id="actionSection" style="display: none;">
+                <button class="btn-primary" id="runMacro">
+                    <i class="fas fa-play"></i> Run Macro
+                </button>
+                <button class="btn-secondary" id="downloadResult">
+                    <i class="fas fa-download"></i> Download Result
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2><i class="fas fa-file-alt"></i> Results</h2>
+                    <div class="results-actions">
+                        <button class="btn-copy" id="copyResults"><i class="fas fa-copy"></i> Copy</button>
+                        <button class="btn-close" id="closeResults"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="results-content" id="resultsContent">
+                    <!-- Results will be displayed here -->
+                </div>
+            </section>
+
+            <!-- Output Preview -->
+            <section class="output-section" id="outputSection" style="display: none;">
+                <div class="output-header">
+                    <h2><i class="fas fa-table"></i> Output Preview</h2>
+                    <div class="output-actions">
+                        <span class="row-count" id="rowCount">0 rows</span>
+                        <button class="btn-copy-table" id="copyTable">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button class="btn-download-csv" id="downloadCsv">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                        <button class="btn-download-png" id="downloadPng" style="display:none;">
+                            <i class="fas fa-image"></i> PNG
+                        </button>
+                        <button class="btn-download-pdf" id="downloadPdf" style="display:none;">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="output-table-container" id="outputContainer">
+                    <table class="output-table" id="outputTable">
+                        <thead id="outputHead"></thead>
+                        <tbody id="outputBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Developed by DSU11425 &bull; All macros converted to web application</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-pulse"></i>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/calculateReceivings.js"></script>
+    <script src="js/generateBioTime.js"></script>
+    <script src="js/generateDailyReport.js"></script>
+</body>
+</html>
